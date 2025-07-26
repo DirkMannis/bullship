@@ -6,165 +6,150 @@
     <title>BullshipDAO</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
 
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-        }
+    body {
+        background-color: #FF8C4D; /* Lighter orange background */
+        color: #000000; /* Black text */
+    }
 
-        /* Header */
-        header {
-            background-color: #1a1a1a;
-            padding: 20px 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
+    /* Header */
+    header {
+        background-color: #FF6200; /* Orange header */
+        padding: 20px 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
 
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
+    nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+    }
 
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #fff;
-        }
+    .logo {
+        font-size: 24px;
+        font-weight: 700;
+        color: #FFFFFF; /* White logo text */
+    }
 
-        .nav-links a {
-            color: #fff;
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
+    .nav-links a {
+        color: #FFFFFF; /* White nav links */
+        text-decoration: none;
+        margin-left: 20px;
+        font-size: 16px;
+        transition: color 0.3s;
+    }
 
-        .nav-links a:hover {
-            color: #00ff88;
-        }
+    .nav-links a:hover {
+        color: #FF8C4D; /* Light orange hover */
+    }
 
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 100px 20px;
-            margin-top: 80px;
-        }
+    /* Hero Section */
+    .hero {
+        text-align: center;
+        padding: 100px 20px;
+        margin-top: 80px;
+        background-color: #FFFFFF; /* White hero background */
+    }
 
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: #1a1a1a;
-        }
+    .hero h1 {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #000000; /* Black heading */
+    }
 
-        .hero p {
-            font-size: 18px;
-            max-width: 600px;
-            margin: 0 auto;
-            color: #666;
-        }
+    .hero p {
+        font-size: 18px;
+        max-width: 600px;
+        margin: 0 auto;
+        color: #000000; /* Black text */
+    }
 
-        .hero .cta-button {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 15px 30px;
-            background-color: #00ff88;
-            color: #1a1a1a;
-            text-decoration: none;
-            font-weight: 600;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
+    .hero .cta-button {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 15px 30px;
+        background-color: #FF6200; /* Orange CTA */
+        color: #FFFFFF; /* White text on button */
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
 
-        .hero .cta-button:hover {
-            background-color: #00cc66;
-        }
+    .hero .cta-button:hover {
+        background-color: #CC4E00; /* Darker orange hover */
+    }
 
-        /* Treasury Holdings Section */
-        .treasury {
-            max-width: 80%;
-            margin: 50px auto;
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+    /* Treasury Holdings Section */
+    .treasury {
+        max-width: 80%;
+        margin: 50px auto;
+        background-color: #FFFFFF; /* White treasury background */
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
 
-        .treasury h2 {
-            font-size: 32px;
-            margin-bottom: 30px;
-            color: #1a1a1a;
-        }
+    .treasury h2 {
+        font-size: 32px;
+        margin-bottom: 30px;
+        color: #000000; /* Black heading */
+    }
 
-        .treasury-table {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            text-align: left;
-        }
+    .treasury-table {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        text-align: left;
+    }
 
-        .treasury-item {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-            text-align: center;
-        }
+    .treasury-item {
+        background-color: #FF8C4D; /* Light orange cards */
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+    }
 
-        .treasury-item h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: #1a1a1a;
-        }
+    .treasury-item h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        color: #000000; /* Black text */
+    }
 
-        .treasury-item p {
-            font-size: 16px;
-            color: #666;
-        }
+    .treasury-item p {
+        font-size: 16px;
+        color: #000000; /* Black text */
+    }
 
-        /* Footer */
-        footer {
-            background-color: #1a1a1a;
-            color: #fff;
-            text-align: center;
-            padding: 20px 0;
-        }
+    /* Footer */
+    footer {
+        background-color: #FF6200; /* Orange footer */
+        color: #FFFFFF; /* White text */
+        text-align: center;
+        padding: 20px 0;
+    }
 
-        footer p {
-            font-size: 14px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 36px;
-            }
-
-            .treasury {
-                max-width: 90%;
-            }
-
-            .treasury-table {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-links a {
-                margin-left: 10px;
-                font-size: 14px;
-            }
-        }
-    </style>
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero h1 { font-size: 36px; }
+        .treasury { max-width: 90%; }
+        .treasury-table { grid-template-columns: 1fr; }
+        .nav-links a { margin-left: 10px; font-size: 14px; }
+    }
+</style>
 </head>
 <body>
     <!-- Header -->
