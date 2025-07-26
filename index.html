@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bullship DAO</title>
+    <title>BullshipDAO</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -146,6 +147,14 @@
             justify-content: center;
         }
 
+        .treasury-item.error {
+            background-color: #FF4D4D; /* Red for errors */
+            color: #FFFFFF;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
         /* Footer */
         footer {
             background-color: #FF6200; /* Orange footer */
@@ -167,7 +176,7 @@
     <!-- Header -->
     <header>
         <nav>
-            <div class="logo">Bullship DAO</div>
+            <div class="logo">BullshipDAO</div>
             <div class="nav-links">
                 <a href="#home">Home</a>
                 <a href="#treasury">Treasury</a>
@@ -179,7 +188,7 @@
 
     <!-- Hero Section -->
     <section class="hero" id="home">
-        <h1>Welcome to Bullship DAO</h1>
+        <h1>Welcome to BullshipDAO</h1>
         <p>A decentralized community driving innovation and value in the blockchain ecosystem.</p>
         <a href="#treasury" class="cta-button">View Treasury</a>
     </section>
@@ -195,42 +204,84 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Bullship DAO. All rights reserved.</p>
+        <p>&copy; 2025 BullshipDAO. All rights reserved.</p>
     </footer>
 
     <script>
-        // Simulated data fetch (replace with real API call when ready)
+        // ERC-20 ABI (minimal for balanceOf)
+        const ERC20_ABI = [
+            {
+                "constant": true,
+                "inputs": [{"name": "_owner", "type": "address"}],
+                "name": "balanceOf",
+                "outputs": [{"name": "balance", "type": "uint256"}],
+                "type": "function"
+            }
+        ];
+
+        // Known Avalanche C-Chain token contract addresses (expand as needed)
+        const tokenContracts = [
+            { name: "AVAX", address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7", decimals: 18 }, // Wrapped AVAX
+            { name: "ID", address: "0x34a528da3b2ea5c6ad1796eba756445d1299a577", decimals: 18 },
+            { name: "USDC", address: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E", decimals: 6 },
+            { name: "JOE", address: "0x6e84a6216eA6dACC71eE8E6b0a5B7322EEbC0fDd", decimals: 18 }
+        ];
+
+        // Approximate token prices (as of 02:19 PM CDT, July 26, 2025, based on recent trends)
+        const tokenPrices = {
+            "AVAX": 24.84, // USD per AVAX
+            "ID": 0.00109, // USD per ID
+            "USDC": 1.00,  // USD per USDC
+            "JOE": 0.15    // USD per JOE (hypothetical, adjust with real data)
+        };
+
         async function fetchTreasuryData() {
-            // Placeholder wallet address (replace with your actual address)
-            const walletAddress = "0x1234567890abcdef1234567890abcdef12345678";
-            // Simulated API response (replace with Avalanche API or contract call)
-            const tokens = [
-                { name: "AVAX", amount: 5000, usdValue: 124200 }, // Approx. $24.84 * 5000 (as of 02:06 PM CDT, July 26, 2025)
-                { name: "USDC", amount: 10000, usdValue: 10000 },
-                { name: "JOE", amount: 25000, usdValue: 3750 }    // Hypothetical value
-            ];
-
-            // Clear loading state
             const table = document.getElementById("treasury-table");
-            table.innerHTML = "";
+            table.innerHTML = "<div class='treasury-item loading'>Loading treasury data...</div>";
 
-            // Populate treasury items
-            tokens.forEach(token => {
-                const item = document.createElement("div");
-                item.className = "treasury-item";
-                item.innerHTML = `
-                    <h3>${token.name}</h3>
-                    <p>Amount: ${token.amount.toLocaleString()}</p>
-                    <p>Value: $${token.usdValue.toLocaleString()}</p>
-                `;
-                table.appendChild(item);
-            });
+            try {
+                // Initialize Web3 with Avalanche C-Chain RPC
+                const web3 = new Web3("https://api.avax.network/ext/bc/C/rpc");
+                const walletAddress = "0x06dda25dbf933471f9f92b431d936b67f9898ba3";
+
+                let tokens = [];
+                for (let token of tokenContracts) {
+                    const contract = new web3.eth.Contract(ERC20_ABI, token.address);
+                    const balance = await contract.methods.balanceOf(walletAddress).call() / Math.pow(10, token.decimals);
+                    const usdValue = balance * tokenPrices[token.name];
+                    if (usdValue > 100) {
+                        tokens.push({ name: token.name, amount: balance, usdValue });
+                    }
+                }
+
+                // Clear loading state
+                table.innerHTML = "";
+
+                // Populate treasury items
+                if (tokens.length === 0) {
+                    table.innerHTML = "<div class='treasury-item'>No tokens above $100.</div>";
+                } else {
+                    tokens.forEach(token => {
+                        const item = document.createElement("div");
+                        item.className = "treasury-item";
+                        item.innerHTML = `
+                            <h3>${token.name}</h3>
+                            <p>Amount: ${token.amount.toLocaleString()}</p>
+                            <p>Value: $${token.usdValue.toLocaleString()}</p>
+                        `;
+                        table.appendChild(item);
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching treasury data:", error);
+                table.innerHTML = "<div class='treasury-item error'>Failed to load treasury data. Check console for details.</div>";
+            }
         }
 
         // Call the function when the page loads
         window.onload = fetchTreasuryData;
 
-        // Refresh every 60 seconds for simulated live updates
+        // Refresh every 60 seconds for live updates
         setInterval(fetchTreasuryData, 60000);
     </script>
 </body>
