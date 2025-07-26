@@ -219,21 +219,12 @@
             }
         ];
 
-        // Known Avalanche C-Chain token contract addresses (expand as needed)
+        // Known Avalanche C-Chain token contract addresses
         const tokenContracts = [
-            { name: "AVAX", address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7", decimals: 18 }, // Wrapped AVAX
-            { name: "ID", address: "0x34a528da3b2ea5c6ad1796eba756445d1299a577", decimals: 18 },
-            { name: "USDC", address: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E", decimals: 6 },
-            { name: "JOE", address: "0x6e84a6216eA6dACC71eE8E6b0a5B7322EEbC0fDd", decimals: 18 }
+            { name: "avalanche-2", address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7", decimals: 18 }, // Wrapped AVAX (CoinGecko ID: avalanche-2)
+            { name: "usd-coin", address: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E", decimals: 6 }, // USDC
+            { name: "joe", address: "0x6e84a6216eA6dACC71eE8E6b0a5B7322EEbC0fDd", decimals: 18 } // JOE
         ];
-
-        // Approximate token prices (as of 02:19 PM CDT, July 26, 2025, based on recent trends)
-        const tokenPrices = {
-            "AVAX": 24.84, // USD per AVAX
-            "ID": 0.00109, // USD per ID
-            "USDC": 1.00,  // USD per USDC
-            "JOE": 0.15    // USD per JOE (hypothetical, adjust with real data)
-        };
 
         async function fetchTreasuryData() {
             const table = document.getElementById("treasury-table");
@@ -242,13 +233,21 @@
             try {
                 // Initialize Web3 with Avalanche C-Chain RPC
                 const web3 = new Web3("https://api.avax.network/ext/bc/C/rpc");
-                const walletAddress = "0x2CD78aD719a8c74898c5283f5Bc70920D8A061fd";
+                const walletAddress = "0xaf137d83C2675A72Ba00084158abDd8001F47084";
+
+                // Fetch real-time prices from CoinGecko
+                const coinGeckoIds = tokenContracts.map(t => t.name).join(",");
+                const priceUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${coinGeckoIds}&vs_currencies=usd`;
+                const priceResponse = await fetch(priceUrl);
+                if (!priceResponse.ok) throw new Error("Failed to fetch prices from CoinGecko");
+                const prices = await priceResponse.json();
 
                 let tokens = [];
                 for (let token of tokenContracts) {
                     const contract = new web3.eth.Contract(ERC20_ABI, token.address);
                     const balance = await contract.methods.balanceOf(walletAddress).call() / Math.pow(10, token.decimals);
-                    const usdValue = balance * tokenPrices[token.name];
+                    const price = prices[token.name]?.usd || 0; // Fallback to 0 if price unavailable
+                    const usdValue = balance * price;
                     if (usdValue > 100) {
                         tokens.push({ name: token.name, amount: balance, usdValue });
                     }
@@ -265,7 +264,7 @@
                         const item = document.createElement("div");
                         item.className = "treasury-item";
                         item.innerHTML = `
-                            <h3>${token.name}</h3>
+                            <h3>${token.name.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}</h3>
                             <p>Amount: ${token.amount.toLocaleString()}</p>
                             <p>Value: $${token.usdValue.toLocaleString()}</p>
                         `;
