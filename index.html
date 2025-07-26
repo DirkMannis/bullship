@@ -39,10 +39,21 @@
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #FFFFFF; /* White logo text */
+    font-size: 24px; /* Keep for fallback if image fails */
+    font-weight: 700;
+    /* Remove color since it's an image */
         }
+        .logo-img {
+    height: 40px; /* Adjust size as needed */
+    width: auto; /* Maintain aspect ratio */
+    vertical-align: middle; /* Align with nav links */
+}
+
+        @media (max-width: 768px) {
+    .logo-img {
+        height: 30px; /* Smaller size for mobile */
+    }
+}
 
         .nav-links a {
             color: #FFFFFF; /* White nav links */
@@ -176,7 +187,9 @@
     <!-- Header -->
     <header>
         <nav>
-            <div class="logo">Bullship DAO</div>
+        <div class="logo">
+            <img src="images/bullship-logo.png" alt="Bullship DAO Logo" class="logo-img">
+        </div>
             <div class="nav-links">
                 <a href="#home">Home</a>
                 <a href="#treasury">Treasury</a>
@@ -220,12 +233,12 @@
         ];
 
         // Known Avalanche C-Chain token contract addresses
-        const tokenContracts = [
-            { name: "avalanche-2", address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7", decimals: 18 }, // AVAX (CoinGecko ID: avalanche-2)
-            { name: "joe", address: "0x6e84a6216eA6dACC71eE8E6b0a5B7322EEbC0fDd", decimals: 18 } // JOE
-//            { name: "coq-inu", address: "0x420fca0121dc28039145009570975747295f2329", decimals: 18 } // COQ
-            { name: "usd-coin", address: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E", decimals: 6 }, // USDC
-        ];
+const tokenContracts = [
+    { name: "avalanche-2", address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7", decimals: 18 }, // AVAX
+    { name: "joe", address: "0x6e84a6216eA6dACC71eE8E6b0a5B7322EEbC0fDd", decimals: 18 }, // JOE
+    // { name: "coq-inu", address: "0x420fca0121dc28039145009570975747295f2329", decimals: 18 }, // COQ (commented out)
+    { name: "usd-coin", address: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E", decimals: 6 } // USDC
+];
 
         async function fetchTreasuryData() {
             const table = document.getElementById("treasury-table");
